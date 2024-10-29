@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>Comparison of Common Programming Languages</title>
+      <link href="/2024/10/28/Comparison%20of%20Common%20Programming%20Languages/"/>
+      <url>/2024/10/28/Comparison%20of%20Common%20Programming%20Languages/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Comparison-of-Common-Programming-Languages"><a href="#Comparison-of-Common-Programming-Languages" class="headerlink" title="Comparison of Common Programming Languages"></a>Comparison of Common Programming Languages</h1><table><thead><tr><th>Feature</th><th><strong>C</strong></th><th><strong>C++</strong></th><th><strong>Java</strong></th><th><strong>Python</strong></th></tr></thead><tbody><tr><td><strong>Language Type</strong></td><td>Procedural programming language</td><td>Procedural and Object-Oriented</td><td>Object-Oriented with platform independence</td><td>High-level, dynamically typed language</td></tr><tr><td><strong>Usage</strong></td><td>Systems programming, OS, drivers</td><td>High-performance applications, game development, graphics</td><td>Enterprise applications, web, Android</td><td>Data science, AI, web development, scripting</td></tr><tr><td><strong>Execution</strong></td><td>Compiled</td><td>Compiled</td><td>Compiled to bytecode, interpreted by JVM</td><td>Interpreted</td></tr><tr><td><strong>Syntax Complexity</strong></td><td>Simple yet low-level, error-prone</td><td>Complex, with OOP and STL features</td><td>Moderately simple, structured</td><td>Very simple, easy-to-read</td></tr><tr><td><strong>Memory Management</strong></td><td>Manual (malloc&#x2F;free)</td><td>Manual and automatic (smart pointers)</td><td>Automatic with garbage collection</td><td>Automatic with garbage collection</td></tr><tr><td><strong>Performance</strong></td><td>Very high</td><td>Very high</td><td>High with JIT optimizations</td><td>Lower, but fast for scripting and prototyping</td></tr><tr><td><strong>Cross-Platform</strong></td><td>Weak, requires recompilation</td><td>Weak, platform-specific dependencies</td><td>Strong, JVM-based</td><td>Strong, interpreter-dependent</td></tr><tr><td><strong>Community and Libraries</strong></td><td>Limited, more for low-level libraries</td><td>Rich, with STL and Boost</td><td>Rich ecosystem, especially for enterprise</td><td>Extensive, especially for data science and AI</td></tr><tr><td><strong>Error Handling</strong></td><td>Limited, relies on return codes</td><td>Exception handling supported</td><td>Robust exception handling</td><td>Exception handling supported</td></tr><tr><td><strong>Concurrency</strong></td><td>Limited</td><td>Advanced concurrency support</td><td>Strong concurrency support</td><td>Basic concurrency, GIL limits multithreading</td></tr><tr><td><strong>Primary Domains</strong></td><td>System software, embedded systems</td><td>Game development, real-time systems</td><td>Web, enterprise applications, Android</td><td>Data science, machine learning, web</td></tr><tr><td><strong>Syntax and Ease of Use</strong></td><td>Difficult for beginners</td><td>Complex, steep learning curve</td><td>Moderate, beginner-friendly</td><td>Easiest to learn, highly readable</td></tr><tr><td><strong>Popular Libraries and Frameworks</strong></td><td>POSIX, glibc</td><td>STL, Boost, Qt</td><td>Spring, Hibernate, JavaFX</td><td>NumPy, Pandas, TensorFlow, Flask</td></tr></tbody></table>]]></content>
+      
+      
+      <categories>
+          
+          <category> Learning CS </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> CS basic </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>2501. Longest Square Streak in an Array</title>
       <link href="/2024/10/28/2501.%20Longest%20Square%20Streak%20in%20an%20Array/"/>
       <url>/2024/10/28/2501.%20Longest%20Square%20Streak%20in%20an%20Array/</url>
