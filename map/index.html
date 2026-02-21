@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <title>My Travel Map</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    #map {
+      width: 100%;
+      height: 100vh;
+      background: #aad3df;
+    }
+    
+    /* Statistics panel styles */
+    .stats-panel {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      z-index: 1000;
+      min-width: 200px;
+    }
+    
+    .stats-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #03a9f4;
+      padding-bottom: 8px;
+    }
+    
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 12px 0;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .stat-item:last-child {
+      border-bottom: none;
+    }
+    
+    .stat-label {
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .stat-value {
+      color: #03a9f4;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    
+    .stat-icon {
+      margin-right: 8px;
+    }
+    
+    /* Responsive design for mobile */
+    @media (max-width: 768px) {
+      .stats-panel {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        padding: 15px;
+        min-width: auto;
+      }
+      
+      .stats-title {
+        font-size: 16px;
+      }
+      
+      .stat-value {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<!-- Statistics panel -->
+<div class="stats-panel">
+  <div class="stats-title">✈️ Travel Statistics</div>
+  <div class="stat-item">
+    <span class="stat-label">🌍 Countries Visited</span>
+    <span class="stat-value" id="countryCount">0</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">✈️ Total Flights</span>
+    <span class="stat-value" id="flightCount">0</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">🛫 Airports</span>
+    <span class="stat-value" id="airportCount">0</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">🌏 Distance (mi)</span>
+    <span class="stat-value" id="totalDistance">0</span>
+  </div>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+/* =====================================================
+ * 1️⃣ Initialize map (allow world wrapping)
+ * ===================================================== */
+const map = L.map('map', {
+  worldCopyJump: false,
+  minZoom: 2,
+  maxZoom: 6
+}).setView([20, 0], 2);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap contributors',
+  noWrap: true
+}).addTo(map);
+
+
+/* =====================================================
+ * 2️⃣ Highlight visited countries (allow wrap)
+ * ===================================================== */
+Promise.all([
+  fetch('./world.geo.json').then(r => r.json()),
+  fetch('./CountriesandRegions.json').then(r => r.json())
+]).then(([worldData, countryData]) => {
+
+  const visited = new Set(countryData.visited);
+  
+  // Update country count statistics
+  document.getElementById('countryCount').textContent = visited.size - 1;
+
+  const countryLayer = L.geoJSON(worldData, {
+    style: feature => {
+      const name =
+        feature.properties.ADMIN ||
+        feature.properties.NAME ||
+        feature.properties.name;
+
+      const isVisited = visited.has(name);
+
+      return {
+        fillColor: isVisited ? "#ff9800" : "#eeeeee",
+        fillOpacity: isVisited ? 0.65 : 0.25,
+        color: "#666",
+        weight: 1
+      };
+    },
+    onEachFeature: (feature, layer) => {
+      const name =
+        feature.properties.ADMIN ||
+        feature.properties.NAME ||
+        feature.properties.name;
+
+      if (name) {
+        layer.bindTooltip(name, { sticky: true });
+      }
+    }
+  });
+
+  // Key: Allow world wrapping for country layer
+  countryLayer.options.noWrap = false;
+  countryLayer.addTo(map);
+});
+
+
+/* =====================================================
+ * 3️⃣ Normalize longitude pair (choose shortest path)
+ * ===================================================== */
+function normalizeLngPair(lng1, lng2) {
+  // Calculate distances in both directions
+  const directDiff = lng2 - lng1;
+  const wrapDiff = directDiff > 0 ? directDiff - 360 : directDiff + 360;
+  
+  // Choose the shorter path
+  if (Math.abs(wrapDiff) < Math.abs(directDiff)) {
+    lng2 = lng1 + wrapDiff;
+  }
+  
+  return [lng1, lng2];
+}
+
+
+/* =====================================================
+ * 4️⃣ Mathematically correct great circle interpolation
+ * ===================================================== */
+function greatCirclePoints(lat1, lon1, lat2, lon2, steps = 150) {
+  const toRad = d => d * Math.PI / 180;
+  const toDeg = r => r * 180 / Math.PI;
+
+  lat1 = toRad(lat1);
+  lon1 = toRad(lon1);
+  lat2 = toRad(lat2);
+  lon2 = toRad(lon2);
+
+  const d = 2 * Math.asin(Math.sqrt(
+    Math.sin((lat1 - lat2) / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) *
+    Math.sin((lon1 - lon2) / 2) ** 2
+  ));
+
+  const points = [];
+
+  for (let i = 0; i <= steps; i++) {
+    const f = i / steps;
+    const A = Math.sin((1 - f) * d) / Math.sin(d);
+    const B = Math.sin(f * d) / Math.sin(d);
+
+    const x =
+      A * Math.cos(lat1) * Math.cos(lon1) +
+      B * Math.cos(lat2) * Math.cos(lon2);
+    const y =
+      A * Math.cos(lat1) * Math.sin(lon1) +
+      B * Math.cos(lat2) * Math.sin(lon2);
+    const z =
+      A * Math.sin(lat1) +
+      B * Math.sin(lat2);
+
+    const lat = Math.atan2(z, Math.sqrt(x * x + y * y));
+    const lon = Math.atan2(y, x);
+
+    points.push([toDeg(lat), toDeg(lon)]);
+  }
+
+  return points;
+}
+
+
+/* =====================================================
+ * 5️⃣ Calculate distance between two points (Haversine formula)
+ * ===================================================== */
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Earth radius in km
+  const toRad = d => d * Math.PI / 180;
+  
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  
+  const a = 
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  
+  return R * c / 1.60934; // Distance in miles
+}
+
+
+/* =====================================================
+ * 6️⃣ Load airports & flights and draw routes
+ * ===================================================== */
+Promise.all([
+  fetch('./airports.json').then(r => r.json()),
+  fetch('./flights.json').then(r => r.json())
+]).then(([airports, flights]) => {
+
+  // Statistics data
+  const uniqueAirports = new Set();
+  let totalDistance = 0;
+
+  flights.forEach(f => {
+    const from = airports[f.from];
+    const to = airports[f.to];
+    if (!from || !to) return;
+
+    // Count unique airports
+    uniqueAirports.add(f.from);
+    uniqueAirports.add(f.to);
+
+    // Calculate distance
+    const distance = calculateDistance(from.lat, from.lng, to.lat, to.lng);
+    totalDistance += distance;
+
+    // Draw airport markers
+    L.circleMarker([from.lat, from.lng], {
+      radius: 3,
+      color: "#ff5722",
+      fillColor: "#ff5722",
+      fillOpacity: 1
+    }).addTo(map);
+
+    L.circleMarker([to.lat, to.lng], {
+      radius: 3,
+      color: "#ff5722",
+      fillColor: "#ff5722",
+      fillOpacity: 1
+    }).addTo(map);
+
+    // Calculate using shortest path
+    const [lng1, lng2] = normalizeLngPair(from.lng, to.lng);
+
+    const arc = greatCirclePoints(
+      from.lat, lng1,
+      to.lat, lng2,
+      160
+    );
+
+    // Draw in segments (handle crossing ±180°)
+    let currentSegment = [];
+    
+    for (let i = 0; i < arc.length; i++) {
+      const [lat, lng] = arc[i];
+      
+      if (i > 0) {
+        const prevLng = arc[i-1][1];
+        // Detect longitude jump (exceeds 180 degrees)
+        if (Math.abs(lng - prevLng) > 180) {
+          // Draw current segment
+          if (currentSegment.length > 1) {
+            L.polyline(currentSegment, {
+              color: "#03a9f4",
+              weight: 3,
+              opacity: 0.85,
+              lineCap: "round",
+              lineJoin: "round"
+            }).addTo(map);
+          }
+          currentSegment = [];
+        }
+      }
+      
+      currentSegment.push([lat, lng]);
+    }
+    
+    // Draw final segment
+    if (currentSegment.length > 1) {
+      L.polyline(currentSegment, {
+        color: "#03a9f4",
+        weight: 3,
+        opacity: 0.85,
+        lineCap: "round",
+        lineJoin: "round"
+      }).addTo(map);
+    }
+  });
+
+  // Update statistics panel
+  document.getElementById('flightCount').textContent = flights.length;
+  document.getElementById('airportCount').textContent = uniqueAirports.size;
+  document.getElementById('totalDistance').textContent = Math.round(totalDistance).toLocaleString();
+});
+</script>
+
+</body>
+</html>
