@@ -4,6 +4,258 @@
   
     
     <entry>
+      <title>LeetCode 1944. Number of Visible People in a Queue</title>
+      <link href="/2026/03/10/LeetCode%201944.%20Number%20of%20Visible%20People%20in%20a%20Queue/"/>
+      <url>/2026/03/10/LeetCode%201944.%20Number%20of%20Visible%20People%20in%20a%20Queue/</url>
+      
+        <content type="html"><![CDATA[<h1 id="LeetCode-1944-Number-of-Visible-People-in-a-Queue"><a href="#LeetCode-1944-Number-of-Visible-People-in-a-Queue" class="headerlink" title="LeetCode 1944. Number of Visible People in a Queue"></a>LeetCode 1944. Number of Visible People in a Queue</h1><p><a href="https://leetcode.com/problems/number-of-visible-people-in-a-queue/">https://leetcode.com/problems/number-of-visible-people-in-a-queue/</a></p><h2 id="Difficulty-Hard"><a href="#Difficulty-Hard" class="headerlink" title="Difficulty: Hard"></a>Difficulty: Hard</h2><h2 id="Key-point-Monotonic-Stack"><a href="#Key-point-Monotonic-Stack" class="headerlink" title="Key point: Monotonic Stack"></a>Key point: Monotonic Stack</h2><p>This is a typical <strong>monotonic stack</strong> problem.</p><p>Each person can see people to their <strong>right</strong> until someone <strong>taller or equal height</strong> blocks the view.</p><p>Rules:</p><ul><li>A person can see all <strong>shorter people</strong> in front of them.</li><li>When a <strong>taller or equal person</strong> appears, they can see that person but cannot see beyond them.</li></ul><p>To simulate this efficiently, we use a <strong>monotonic decreasing stack</strong>.</p><hr><h2 id="Breakdown"><a href="#Breakdown" class="headerlink" title="Breakdown"></a>Breakdown</h2><ol><li>Traverse the array <strong>from right to left</strong>.</li><li>Use a <strong>stack</strong> to store heights of people to the right.</li><li>For each person:</li></ol><ul><li><p>Pop all shorter people from the stack</p><p>  (they are visible).</p></li><li><p>Count how many people were popped.</p></li></ul><ol><li><p>If the stack is not empty after popping,</p><p> the current person can also see <strong>the next taller person</strong>.</p></li><li><p>Push the current height into the stack.</p></li><li><p>Store the total visible count.</p></li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code"></a>Complete code</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">canSeePersonsCount</span>(<span class="params">self, heights: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        n = <span class="built_in">len</span>(heights)</span><br><span class="line">        res = [<span class="number">0</span>] * n</span><br><span class="line">        stack = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n - <span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">            count = <span class="number">0</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">while</span> stack <span class="keyword">and</span> stack[-<span class="number">1</span>] &lt; heights[i]:</span><br><span class="line">                stack.pop()</span><br><span class="line">                count += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> stack:</span><br><span class="line">                count += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            res[i] = count</span><br><span class="line">            stack.append(heights[i])</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Stack </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>LeetCode 239. Sliding Window Maximum</title>
+      <link href="/2026/03/10/LeetCode%20239.%20Sliding%20Window%20Maximum/"/>
+      <url>/2026/03/10/LeetCode%20239.%20Sliding%20Window%20Maximum/</url>
+      
+        <content type="html"><![CDATA[<h1 id="LeetCode-239-Sliding-Window-Maximum"><a href="#LeetCode-239-Sliding-Window-Maximum" class="headerlink" title="LeetCode 239. Sliding Window Maximum"></a>LeetCode 239. Sliding Window Maximum</h1><p><a href="https://leetcode.com/problems/sliding-window-maximum/">https://leetcode.com/problems/sliding-window-maximum/</a></p><h2 id="Difficulty-Hard"><a href="#Difficulty-Hard" class="headerlink" title="Difficulty: Hard"></a>Difficulty: Hard</h2><h2 id="Key-point-Monotonic-Deque-Sliding-Window"><a href="#Key-point-Monotonic-Deque-Sliding-Window" class="headerlink" title="Key point: Monotonic Deque (Sliding Window)"></a>Key point: Monotonic Deque (Sliding Window)</h2><p>This is a typical <strong>sliding window + monotonic deque</strong> problem.</p><p>We need to find the <strong>maximum value in each sliding window of size <code>k</code></strong>.</p><p>The idea is to maintain a <strong>deque that stores indices</strong> of elements in <strong>decreasing order</strong>.</p><p>The front of the deque always represents the <strong>maximum element of the current window</strong>.</p><hr><h2 id="Breakdown"><a href="#Breakdown" class="headerlink" title="Breakdown"></a>Breakdown</h2><ol><li>Use a <strong>deque</strong> to store indices of elements.</li><li>Maintain the deque so that values are in <strong>decreasing order</strong>.</li><li>For each index <code>i</code>:</li></ol><ul><li>Remove indices from the front if they are <strong>outside the window</strong> (<code>i - k</code>).</li><li>Remove indices from the back while the current value is <strong>greater than the values at those indices</strong>.</li></ul><ol><li>Push the current index into the deque.</li><li>When <code>i ≥ k - 1</code>, the front of the deque is the <strong>maximum of the current window</strong>, so add it to the result.</li><li>Return the result list.</li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code"></a>Complete code</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maxSlidingWindow</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], k: <span class="built_in">int</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        dq = deque()</span><br><span class="line">        res = []</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(nums)):</span><br><span class="line">            <span class="keyword">while</span> dq <span class="keyword">and</span> dq[<span class="number">0</span>] &lt;= i - k:</span><br><span class="line">                dq.popleft()</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">while</span> dq <span class="keyword">and</span> nums[dq[-<span class="number">1</span>]] &lt; nums[i]:</span><br><span class="line">                dq.pop()</span><br><span class="line">            </span><br><span class="line">            dq.append(i)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> i &gt;= k - <span class="number">1</span>:</span><br><span class="line">                res.append(nums[dq[<span class="number">0</span>]])</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Queue </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>LeetCode 138. Copy List with Random Pointer</title>
+      <link href="/2026/03/10/LeetCode%20138.%20Copy%20List%20with%20Random%20Pointer/"/>
+      <url>/2026/03/10/LeetCode%20138.%20Copy%20List%20with%20Random%20Pointer/</url>
+      
+        <content type="html"><![CDATA[<h1 id="LeetCode-138-Copy-List-with-Random-Pointer"><a href="#LeetCode-138-Copy-List-with-Random-Pointer" class="headerlink" title="LeetCode 138. Copy List with Random Pointer"></a>LeetCode 138. Copy List with Random Pointer</h1><p><a href="https://leetcode.com/problems/copy-list-with-random-pointer/">https://leetcode.com/problems/copy-list-with-random-pointer/</a></p><h2 id="Difficulty-Medium"><a href="#Difficulty-Medium" class="headerlink" title="Difficulty: Medium"></a>Difficulty: Medium</h2><h2 id="Key-point-Hash-Map"><a href="#Key-point-Hash-Map" class="headerlink" title="Key point: Hash Map"></a>Key point: Hash Map</h2><p>This is a typical <strong>linked list + hash map</strong> problem.</p><p>Each node has two pointers:</p><ul><li><code>next</code></li><li><code>random</code></li></ul><p>We need to create a <strong>deep copy</strong> of the list.</p><p>The main difficulty is that the <code>random</code> pointer may point to <strong>any node in the list</strong> or <code>None</code>.</p><p>So we use a <strong>hash map</strong> to store the mapping between the <strong>original node</strong> and the <strong>copied node</strong>.</p><hr><h2 id="Breakdown"><a href="#Breakdown" class="headerlink" title="Breakdown"></a>Breakdown</h2><ol><li>Create a <strong>hash map</strong>:</li></ol><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">original_node -&gt; copied_node</span><br></pre></td></tr></table></figure><ol><li>First pass:</li></ol><ul><li>Traverse the original list</li><li>Create a copy of each node</li><li>Store the mapping in the hash map</li></ul><ol><li>Second pass:</li></ol><ul><li>Set the <code>next</code> pointer of the copied nodes</li><li>Set the <code>random</code> pointer using the hash map</li></ul><ol><li>Return the copied head node.</li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code"></a>Complete code</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">copyRandomList</span>(<span class="params">self, head: <span class="string">&#x27;Optional[Node]&#x27;</span></span>) -&gt; <span class="string">&#x27;Optional[Node]&#x27;</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> head:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        </span><br><span class="line">        hashmap = &#123;&#125;</span><br><span class="line">        cur = head</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> cur:</span><br><span class="line">            hashmap[cur] = Node(cur.val)</span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">        </span><br><span class="line">        cur = head</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> cur:</span><br><span class="line">            hashmap[cur].<span class="built_in">next</span> = hashmap.get(cur.<span class="built_in">next</span>)</span><br><span class="line">            hashmap[cur].random = hashmap.get(cur.random)</span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> hashmap[head]</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Hash Table </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>LeetCode 503. Next Greater Element II</title>
+      <link href="/2026/03/10/LeetCode%20503.%20Next%20Greater%20Element%20II/"/>
+      <url>/2026/03/10/LeetCode%20503.%20Next%20Greater%20Element%20II/</url>
+      
+        <content type="html"><![CDATA[<h1 id="LeetCode-503-Next-Greater-Element-II"><a href="#LeetCode-503-Next-Greater-Element-II" class="headerlink" title="LeetCode 503. Next Greater Element II"></a>LeetCode 503. Next Greater Element II</h1><p><a href="https://leetcode.com/problems/next-greater-element-ii/">https://leetcode.com/problems/next-greater-element-ii/</a></p><h2 id="Difficulty-Medium"><a href="#Difficulty-Medium" class="headerlink" title="Difficulty: Medium"></a>Difficulty: Medium</h2><h2 id="Key-point-Monotonic-Stack-Circular-Array"><a href="#Key-point-Monotonic-Stack-Circular-Array" class="headerlink" title="Key point: Monotonic Stack + Circular Array"></a>Key point: Monotonic Stack + Circular Array</h2><p>This is a typical <strong>monotonic stack</strong> problem.</p><p>We need to find the <strong>next greater element</strong> for each number in a <strong>circular array</strong>.</p><p>Since the array is circular, after reaching the end we can continue from the beginning.</p><p>To simulate this, we iterate through the array <strong>twice</strong>.</p><p>The stack stores <strong>indices</strong> of elements whose next greater element hasn’t been found yet.</p><hr><h2 id="Breakdown"><a href="#Breakdown" class="headerlink" title="Breakdown"></a>Breakdown</h2><ol><li>Create a result array initialized with <code>1</code>.</li><li>Use a <strong>monotonic decreasing stack</strong> to store indices.</li><li>Iterate through the array <code>2 * n</code> times to simulate the circular array.</li><li>For each element:</li></ol><ul><li>While the stack is not empty and the current number is greater than the number at the stack’s top index:<ul><li>Pop the index from the stack</li><li>Update its result with the current number</li></ul></li></ul><ol><li>If <code>i &lt; n</code>, push the index into the stack (to avoid duplicates).</li><li>Return the result array.</li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code"></a>Complete code</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">nextGreaterElements</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        res = [-<span class="number">1</span>] * n</span><br><span class="line">        stack = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span> * n):</span><br><span class="line">            <span class="keyword">while</span> stack <span class="keyword">and</span> nums[stack[-<span class="number">1</span>]] &lt; nums[i % n]:</span><br><span class="line">                idx = stack.pop()</span><br><span class="line">                res[idx] = nums[i % n]</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> i &lt; n:</span><br><span class="line">                stack.append(i)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Stack </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>LeetCode 560. Subarray Sum Equals K</title>
+      <link href="/2026/03/10/LeetCode%20560.%20Subarray%20Sum%20Equals%20K/"/>
+      <url>/2026/03/10/LeetCode%20560.%20Subarray%20Sum%20Equals%20K/</url>
+      
+        <content type="html"><![CDATA[<h1 id="LeetCode-560-Subarray-Sum-Equals-K"><a href="#LeetCode-560-Subarray-Sum-Equals-K" class="headerlink" title="LeetCode 560. Subarray Sum Equals K"></a>LeetCode 560. Subarray Sum Equals K</h1><p><a href="https://leetcode.com/problems/subarray-sum-equals-k/">https://leetcode.com/problems/subarray-sum-equals-k/</a></p><h2 id="Difficulty-Medium"><a href="#Difficulty-Medium" class="headerlink" title="Difficulty: Medium"></a>Difficulty: Medium</h2><h2 id="Key-point-Prefix-Sum-Hash-Map"><a href="#Key-point-Prefix-Sum-Hash-Map" class="headerlink" title="Key point: Prefix Sum + Hash Map"></a>Key point: Prefix Sum + Hash Map</h2><p>This is a typical <strong>prefix sum</strong> problem.</p><p>We want to count the number of <strong>continuous subarrays whose sum equals <code>k</code></strong>.</p><p>Instead of checking all subarrays (which would be <code>O(n²)</code>), we use <strong>prefix sums</strong> with a <strong>hash map</strong>.</p><p>Key idea:</p><p>If</p><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">prefix_sum[j] - prefix_sum[i] = k</span><br></pre></td></tr></table></figure><p>then the subarray <code>(i+1 ... j)</code> sums to <code>k</code>.</p><p>So while iterating, we check if <code>(current_sum - k)</code> has appeared before.</p><hr><h2 id="Breakdown"><a href="#Breakdown" class="headerlink" title="Breakdown"></a>Breakdown</h2><ol><li>Maintain a variable <code>prefix_sum</code> to store the running sum.</li><li>Use a <strong>hash map</strong> to store the frequency of each prefix sum.</li><li>Initialize the map with:</li></ol><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">&#123;<span class="number">0</span>: <span class="number">1</span>&#125;</span><br></pre></td></tr></table></figure><p>This handles the case where a subarray starting from index <code>0</code> sums to <code>k</code>.</p><ol><li>Iterate through the array:</li></ol><ul><li>Update <code>prefix_sum</code></li><li>Check if <code>prefix_sum - k</code> exists in the map</li><li>If yes, add its frequency to the result</li></ul><ol><li>Update the count of <code>prefix_sum</code> in the map.</li><li>Return the total count.</li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code"></a>Complete code</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">subarraySum</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        prefix_sum = <span class="number">0</span></span><br><span class="line">        count = <span class="number">0</span></span><br><span class="line">        hashmap = &#123;<span class="number">0</span>: <span class="number">1</span>&#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> num <span class="keyword">in</span> nums:</span><br><span class="line">            prefix_sum += num</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> prefix_sum - k <span class="keyword">in</span> hashmap:</span><br><span class="line">                count += hashmap[prefix_sum - k]</span><br><span class="line">            </span><br><span class="line">            hashmap[prefix_sum] = hashmap.get(prefix_sum, <span class="number">0</span>) + <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> count</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Hash Table </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>LeetCode 215. Kth Largest Element in an Array</title>
+      <link href="/2026/03/10/LeetCode%20215.%20Kth%20Largest%20Element%20in%20an%20Array/"/>
+      <url>/2026/03/10/LeetCode%20215.%20Kth%20Largest%20Element%20in%20an%20Array/</url>
+      
+        <content type="html"><![CDATA[<h1 id="LeetCode-215-Kth-Largest-Element-in-an-Array"><a href="#LeetCode-215-Kth-Largest-Element-in-an-Array" class="headerlink" title="LeetCode 215. Kth Largest Element in an Array"></a>LeetCode 215. Kth Largest Element in an Array</h1><p><a href="https://leetcode.com/problems/kth-largest-element-in-an-array/">https://leetcode.com/problems/kth-largest-element-in-an-array/</a></p><h2 id="Difficulty-Medium"><a href="#Difficulty-Medium" class="headerlink" title="Difficulty: Medium"></a>Difficulty: Medium</h2><h2 id="Key-point-Heap-Priority-Queue"><a href="#Key-point-Heap-Priority-Queue" class="headerlink" title="Key point: Heap (Priority Queue)"></a>Key point: Heap (Priority Queue)</h2><p>This is a typical <strong>heap</strong> problem.</p><p>We need to find the <strong>k-th largest element</strong> in the array.</p><p>A common approach is to maintain a <strong>min-heap of size <code>k</code></strong>.</p><ul><li>The heap always keeps the <strong>k largest elements seen so far</strong>.</li><li>The smallest element in the heap is the <strong>k-th largest element</strong>.</li></ul><hr><h2 id="Breakdown"><a href="#Breakdown" class="headerlink" title="Breakdown"></a>Breakdown</h2><ol><li><p>Create a <strong>min-heap</strong>.</p></li><li><p>Iterate through the array.</p></li><li><p>Push each number into the heap.</p></li><li><p>If the heap size becomes larger than <code>k</code>,</p><p> remove the smallest element.</p></li><li><p>After processing all numbers,</p><p> the top of the heap is the <strong>k-th largest element</strong>.</p></li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code"></a>Complete code</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> heapq</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">findKthLargest</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        heap = []</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> num <span class="keyword">in</span> nums:</span><br><span class="line">            heapq.heappush(heap, num)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(heap) &gt; k:</span><br><span class="line">                heapq.heappop(heap)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> heap[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Heap </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>LeetCode 669. Trim a Binary Search Tree</title>
+      <link href="/2026/03/10/LeetCode%20669.%20Trim%20a%20Binary%20Search%20Tree/"/>
+      <url>/2026/03/10/LeetCode%20669.%20Trim%20a%20Binary%20Search%20Tree/</url>
+      
+        <content type="html"><![CDATA[<h1 id="LeetCode-669-Trim-a-Binary-Search-Tree"><a href="#LeetCode-669-Trim-a-Binary-Search-Tree" class="headerlink" title="LeetCode 669. Trim a Binary Search Tree"></a>LeetCode 669. Trim a Binary Search Tree</h1><p><a href="https://leetcode.com/problems/trim-a-binary-search-tree/">https://leetcode.com/problems/trim-a-binary-search-tree/</a></p><h2 id="Difficulty-Easy"><a href="#Difficulty-Easy" class="headerlink" title="Difficulty: Easy"></a>Difficulty: Easy</h2><h2 id="Key-point-Recursion-BST-Property"><a href="#Key-point-Recursion-BST-Property" class="headerlink" title="Key point: Recursion + BST Property"></a>Key point: Recursion + BST Property</h2><p>This is a typical <strong>BST recursion</strong> problem.</p><p>We need to remove all nodes whose values are <strong>not within <code>[low, high]</code></strong>, while keeping the relative structure of the remaining nodes.</p><p>Using the <strong>BST property</strong>:</p><ul><li>Left subtree values <code>&lt; root.val</code></li><li>Right subtree values <code>&gt; root.val</code></li></ul><p>We can decide which subtree to keep or discard.</p><hr><h2 id="Breakdown"><a href="#Breakdown" class="headerlink" title="Breakdown"></a>Breakdown</h2><ol><li>If the node is <code>None</code>, return <code>None</code>.</li><li>If <code>root.val &lt; low</code>:<ul><li>The current node and its left subtree are too small.</li><li>We only need to check the <strong>right subtree</strong>.</li></ul></li><li>If <code>root.val &gt; high</code>:<ul><li>The current node and its right subtree are too large.</li><li>We only need to check the <strong>left subtree</strong>.</li></ul></li><li>Otherwise (<code>low ≤ root.val ≤ high</code>):<ul><li>Keep the current node.</li><li>Recursively trim the left and right subtrees.</li></ul></li><li>Return the root.</li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code"></a>Complete code</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">trimBST</span>(<span class="params">self, root: <span class="type">Optional</span>[TreeNode], low: <span class="built_in">int</span>, high: <span class="built_in">int</span></span>) -&gt; <span class="type">Optional</span>[TreeNode]:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> root.val &lt; low:</span><br><span class="line">            <span class="keyword">return</span> self.trimBST(root.right, low, high)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> root.val &gt; high:</span><br><span class="line">            <span class="keyword">return</span> self.trimBST(root.left, low, high)</span><br><span class="line">        </span><br><span class="line">        root.left = self.trimBST(root.left, low, high)</span><br><span class="line">        root.right = self.trimBST(root.right, low, high)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Recursion </tag>
+            
+            <tag> BST </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>LeetCode 938. Range Sum of BST</title>
+      <link href="/2026/03/10/LeetCode%20938.%20Range%20Sum%20of%20BST/"/>
+      <url>/2026/03/10/LeetCode%20938.%20Range%20Sum%20of%20BST/</url>
+      
+        <content type="html"><![CDATA[<h1 id="LeetCode-938-Range-Sum-of-BST"><a href="#LeetCode-938-Range-Sum-of-BST" class="headerlink" title="LeetCode 938. Range Sum of BST"></a>LeetCode 938. Range Sum of BST</h1><p><a href="https://leetcode.com/problems/range-sum-of-bst/">https://leetcode.com/problems/range-sum-of-bst/</a></p><h2 id="Difficulty-Easy"><a href="#Difficulty-Easy" class="headerlink" title="Difficulty: Easy"></a>Difficulty: Easy</h2><h2 id="Key-point-DFS-BST-Pruning"><a href="#Key-point-DFS-BST-Pruning" class="headerlink" title="Key point: DFS + BST Pruning"></a>Key point: DFS + BST Pruning</h2><p>This is a typical <strong>Depth-First Search (DFS)</strong> problem using the <strong>properties of a Binary Search Tree</strong>.</p><p>In a BST:</p><ul><li>Left subtree values <code>&lt; root.val</code></li><li>Right subtree values <code>&gt; root.val</code></li></ul><p>So we can <strong>prune unnecessary branches</strong>:</p><ul><li>If <code>root.val &lt; low</code>, we only explore the <strong>right subtree</strong></li><li>If <code>root.val &gt; high</code>, we only explore the <strong>left subtree</strong></li></ul><p>This helps reduce unnecessary traversal.</p><hr><h2 id="Breakdown"><a href="#Breakdown" class="headerlink" title="Breakdown"></a>Breakdown</h2><ol><li><p>If the node is <code>None</code>, return <code>0</code>.</p></li><li><p>If <code>root.val &lt; low</code>,</p><p> all left subtree values are smaller, so search <strong>right subtree only</strong>.</p></li><li><p>If <code>root.val &gt; high</code>,</p><p> all right subtree values are larger, so search <strong>left subtree only</strong>.</p></li><li><p>If <code>low ≤ root.val ≤ high</code>,</p><p> include the node value and search both subtrees.</p></li><li><p>Return the sum.</p></li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code"></a>Complete code</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">rangeSumBST</span>(<span class="params">self, root: <span class="type">Optional</span>[TreeNode], low: <span class="built_in">int</span>, high: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> root.val &lt; low:</span><br><span class="line">            <span class="keyword">return</span> self.rangeSumBST(root.right, low, high)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> root.val &gt; high:</span><br><span class="line">            <span class="keyword">return</span> self.rangeSumBST(root.left, low, high)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            root.val</span><br><span class="line">            + self.rangeSumBST(root.left, low, high)</span><br><span class="line">            + self.rangeSumBST(root.right, low, high)</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> DFS </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>LeetCode 108. Convert Sorted Array to Binary Search Tree</title>
+      <link href="/2026/03/10/LeetCode%20108.%20Convert%20Sorted%20Array%20to%20Binary%20Search/"/>
+      <url>/2026/03/10/LeetCode%20108.%20Convert%20Sorted%20Array%20to%20Binary%20Search/</url>
+      
+        <content type="html"><![CDATA[<h1 id="LeetCode-108-Convert-Sorted-Array-to-Binary-Search-Tree"><a href="#LeetCode-108-Convert-Sorted-Array-to-Binary-Search-Tree" class="headerlink" title="LeetCode 108. Convert Sorted Array to Binary Search Tree"></a>LeetCode 108. Convert Sorted Array to Binary Search Tree</h1><p><a href="https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/">https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/</a></p><h2 id="Difficulty-Easy"><a href="#Difficulty-Easy" class="headerlink" title="Difficulty: Easy"></a>Difficulty: Easy</h2><h2 id="Key-point-Divide-and-Conquer-Recursion"><a href="#Key-point-Divide-and-Conquer-Recursion" class="headerlink" title="Key point: Divide and Conquer + Recursion"></a>Key point: Divide and Conquer + Recursion</h2><p>This is a typical <strong>divide and conquer</strong> problem.</p><p>The array is already <strong>sorted in ascending order</strong>, and we need to build a <strong>height-balanced BST</strong>.</p><p>To ensure the tree is balanced, we should always choose the <strong>middle element</strong> as the root.</p><p>Then recursively build the left subtree from the left half and the right subtree from the right half.</p><hr><h2 id="Breakdown"><a href="#Breakdown" class="headerlink" title="Breakdown"></a>Breakdown</h2><ol><li>If the array is empty, return <code>None</code>.</li><li>Find the <strong>middle index</strong> of the array.</li><li>Create a tree node with the middle element.</li><li>Recursively build:<ul><li>Left subtree from the left half of the array.</li><li>Right subtree from the right half of the array.</li></ul></li><li>Return the root node.</li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code"></a>Complete code</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">sortedArrayToBST</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">Optional</span>[TreeNode]:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> nums:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        </span><br><span class="line">        mid = <span class="built_in">len</span>(nums) // <span class="number">2</span></span><br><span class="line">        root = TreeNode(nums[mid])</span><br><span class="line">        </span><br><span class="line">        root.left = self.sortedArrayToBST(nums[:mid])</span><br><span class="line">        root.right = self.sortedArrayToBST(nums[mid+<span class="number">1</span>:])</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Recursion </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>LeetCode 219. Contains Duplicate II</title>
+      <link href="/2026/03/10/LeetCode%20219.%20Contains%20Duplicate%20II/"/>
+      <url>/2026/03/10/LeetCode%20219.%20Contains%20Duplicate%20II/</url>
+      
+        <content type="html"><![CDATA[<h1 id="LeetCode-219-Contains-Duplicate-II"><a href="#LeetCode-219-Contains-Duplicate-II" class="headerlink" title="LeetCode 219. Contains Duplicate II"></a>LeetCode 219. Contains Duplicate II</h1><p><a href="https://leetcode.com/problems/contains-duplicate-ii/">https://leetcode.com/problems/contains-duplicate-ii/</a></p><h2 id="Difficulty-Easy"><a href="#Difficulty-Easy" class="headerlink" title="Difficulty: Easy"></a>Difficulty: Easy</h2><h2 id="Key-point-Hash-Set-Sliding-Window"><a href="#Key-point-Hash-Set-Sliding-Window" class="headerlink" title="Key point: Hash Set + Sliding Window"></a>Key point: Hash Set + Sliding Window</h2><p>This is a typical <strong>sliding window</strong> problem.</p><p>We need to check whether there exist <strong>two different indices <code>i</code> and <code>j</code></strong> such that:</p><ul><li><code>nums[i] == nums[j]</code></li><li><code>|i - j| ≤ k</code></li></ul><p>The idea is to maintain a <strong>window of size <code>k</code></strong> using a hash set.</p><p>If a number already exists in the window, we found a valid duplicate.</p><hr><h2 id="Breakdown"><a href="#Breakdown" class="headerlink" title="Breakdown"></a>Breakdown</h2><ol><li><p>Maintain a <strong>hash set</strong> representing the sliding window of size <code>k</code>.</p></li><li><p>Iterate through the array.</p></li><li><p>For each index <code>i</code>:</p><ul><li><p>If <code>nums[i]</code> already exists in the set,</p><p>  then there is a duplicate within distance <code>k</code>.</p></li></ul></li><li><p>Add <code>nums[i]</code> into the set.</p></li><li><p>If the window size becomes larger than <code>k</code>,</p><p> remove <code>nums[i-k]</code> from the set.</p></li><li><p>If the loop finishes without finding duplicates, return <code>False</code>.</p></li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code"></a>Complete code</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">containsNearbyDuplicate</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        window = <span class="built_in">set</span>()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(nums)):</span><br><span class="line">            <span class="keyword">if</span> nums[i] <span class="keyword">in</span> window:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">            window.add(nums[i])</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(window) &gt; k:</span><br><span class="line">                window.remove(nums[i-k])</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Hash Set </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>LeetCode 256. Paint House</title>
       <link href="/2026/02/14/LeetCode%20256.%20Paint%20House/"/>
       <url>/2026/02/14/LeetCode%20256.%20Paint%20House/</url>
@@ -596,9 +848,9 @@
       
         <tags>
             
-            <tag> DFS </tag>
-            
             <tag> Recursion </tag>
+            
+            <tag> DFS </tag>
             
         </tags>
       
@@ -623,9 +875,9 @@
       
         <tags>
             
-            <tag> DFS </tag>
-            
             <tag> Recursion </tag>
+            
+            <tag> DFS </tag>
             
         </tags>
       
@@ -706,9 +958,9 @@
       
         <tags>
             
-            <tag> DFS </tag>
-            
             <tag> Recursion </tag>
+            
+            <tag> DFS </tag>
             
         </tags>
       
@@ -733,11 +985,11 @@
       
         <tags>
             
-            <tag> Hash Table </tag>
+            <tag> Recursion </tag>
             
             <tag> DFS </tag>
             
-            <tag> Recursion </tag>
+            <tag> Hash Table </tag>
             
         </tags>
       
@@ -981,6 +1233,31 @@
     
     
     <entry>
+      <title>LeetCode 12. Integer to Roman</title>
+      <link href="/2026/01/26/LeetCode%2012.%20Integer%20to%20Roman/"/>
+      <url>/2026/01/26/LeetCode%2012.%20Integer%20to%20Roman/</url>
+      
+        <content type="html"><![CDATA[<h1 id="LeetCode-12-Integer-to-Roman"><a href="#LeetCode-12-Integer-to-Roman" class="headerlink" title="LeetCode 12. Integer to Roman"></a>LeetCode 12. Integer to Roman</h1><p><a href="https://leetcode.com/problems/integer-to-roman/">https://leetcode.com/problems/integer-to-roman/</a></p><h2 id="Difficulty-Medium"><a href="#Difficulty-Medium" class="headerlink" title="Difficulty: Medium"></a>Difficulty: Medium</h2><h2 id="Key-point-Greedy-Algorithm-Number-Conversion"><a href="#Key-point-Greedy-Algorithm-Number-Conversion" class="headerlink" title="Key point: Greedy Algorithm - Number Conversion"></a>Key point: Greedy Algorithm - Number Conversion</h2><p>This problem checks your understanding of number decomposition and greedy matching.</p><p>We are given an integer <code>num</code> and need to convert it into its Roman numeral representation.</p><p>The input is guaranteed to be within the range <code>1 &lt;= num &lt;= 3999</code>.</p><hr><h2 id="Breakdown-into-small-parts"><a href="#Breakdown-into-small-parts" class="headerlink" title="Breakdown into small parts:"></a>Breakdown into small parts:</h2><ol><li><p><strong>Prepare mappings</strong> of integer values to corresponding Roman numerals.</p><p> The Roman numerals are constructed from largest to smallest, subtracting the matched value at each step.</p></li><li><p><strong>Use a greedy approach</strong>:</p><p> Iterate through the value-symbol pairs from largest to smallest.</p></li><li><p>For each value, <strong>append the corresponding symbol</strong> while <code>num &gt;= value</code>.</p></li><li><p><strong>Subtract the value</strong> from <code>num</code> and repeat until <code>num</code> becomes 0.</p></li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code:"></a>Complete code:</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">intToRoman</span>(<span class="params">self, num: <span class="built_in">int</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        val_map = [</span><br><span class="line">            (<span class="number">1000</span>, <span class="string">&#x27;M&#x27;</span>), (<span class="number">900</span>, <span class="string">&#x27;CM&#x27;</span>),</span><br><span class="line">            (<span class="number">500</span>, <span class="string">&#x27;D&#x27;</span>), (<span class="number">400</span>, <span class="string">&#x27;CD&#x27;</span>),</span><br><span class="line">            (<span class="number">100</span>, <span class="string">&#x27;C&#x27;</span>), (<span class="number">90</span>, <span class="string">&#x27;XC&#x27;</span>),</span><br><span class="line">            (<span class="number">50</span>, <span class="string">&#x27;L&#x27;</span>), (<span class="number">40</span>, <span class="string">&#x27;XL&#x27;</span>),</span><br><span class="line">            (<span class="number">10</span>, <span class="string">&#x27;X&#x27;</span>), (<span class="number">9</span>, <span class="string">&#x27;IX&#x27;</span>),</span><br><span class="line">            (<span class="number">5</span>, <span class="string">&#x27;V&#x27;</span>), (<span class="number">4</span>, <span class="string">&#x27;IV&#x27;</span>),</span><br><span class="line">            (<span class="number">1</span>, <span class="string">&#x27;I&#x27;</span>)</span><br><span class="line">        ]</span><br><span class="line"></span><br><span class="line">        result = []</span><br><span class="line">        <span class="keyword">for</span> value, symbol <span class="keyword">in</span> val_map:</span><br><span class="line">            <span class="keyword">while</span> num &gt;= value:</span><br><span class="line">                result.append(symbol)</span><br><span class="line">                num -= value</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join(result)</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Hash Table </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>LeetCode 11. Container With Most Water</title>
       <link href="/2026/01/26/LeetCode%2011.%20Container%20With%20Most%20Water/"/>
       <url>/2026/01/26/LeetCode%2011.%20Container%20With%20Most%20Water/</url>
@@ -1000,31 +1277,6 @@
             <tag> Array </tag>
             
             <tag> Two Pointers </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>LeetCode 13. Roman to Integer</title>
-      <link href="/2026/01/26/LeetCode%2013.%20Roman%20to%20Integer/"/>
-      <url>/2026/01/26/LeetCode%2013.%20Roman%20to%20Integer/</url>
-      
-        <content type="html"><![CDATA[<h1 id="LeetCode-13-Roman-to-Integer"><a href="#LeetCode-13-Roman-to-Integer" class="headerlink" title="LeetCode 13. Roman to Integer"></a>LeetCode 13. Roman to Integer</h1><p><a href="https://leetcode.com/problems/roman-to-integer/">https://leetcode.com/problems/roman-to-integer/</a></p><h2 id="Difficulty-Easy"><a href="#Difficulty-Easy" class="headerlink" title="Difficulty: Easy"></a>Difficulty: Easy</h2><h2 id="Key-point-Character-Mapping-and-Subtraction-Rule"><a href="#Key-point-Character-Mapping-and-Subtraction-Rule" class="headerlink" title="Key point: Character Mapping and Subtraction Rule"></a>Key point: Character Mapping and Subtraction Rule</h2><p>This problem checks your understanding of string traversal and the Roman numeral system’s subtraction rule.</p><p>We are given a Roman numeral string and must convert it to its integer value.</p><p>The input is guaranteed to be valid and in the range 1 to 3999.</p><hr><h2 id="Breakdown-into-small-parts"><a href="#Breakdown-into-small-parts" class="headerlink" title="Breakdown into small parts:"></a>Breakdown into small parts:</h2><ol><li>Create a dictionary that maps Roman characters to their integer values.</li><li>Iterate through the string from left to right.</li><li>For each character, compare its value with the next character:<ul><li>If the next character has a larger value, subtract the current value.</li><li>Otherwise, add the current value.</li></ul></li><li>Continue this until the end of the string.</li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code:"></a>Complete code:</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">romanToInt</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        roman_map = &#123;</span><br><span class="line">            <span class="string">&#x27;I&#x27;</span>: <span class="number">1</span>, <span class="string">&#x27;V&#x27;</span>: <span class="number">5</span>, <span class="string">&#x27;X&#x27;</span>: <span class="number">10</span>, <span class="string">&#x27;L&#x27;</span>: <span class="number">50</span>,</span><br><span class="line">            <span class="string">&#x27;C&#x27;</span>: <span class="number">100</span>, <span class="string">&#x27;D&#x27;</span>: <span class="number">500</span>, <span class="string">&#x27;M&#x27;</span>: <span class="number">1000</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        total = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(s)):</span><br><span class="line">            value = roman_map[s[i]]</span><br><span class="line">            <span class="keyword">if</span> i &lt; <span class="built_in">len</span>(s) - <span class="number">1</span> <span class="keyword">and</span> roman_map[s[i]] &lt; roman_map[s[i + <span class="number">1</span>]]:</span><br><span class="line">                total -= value</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                total += value</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> total</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      <categories>
-          
-          <category> LeetCode </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Hash Table </tag>
             
         </tags>
       
@@ -1058,11 +1310,36 @@
     
     
     <entry>
-      <title>LeetCode 16. 3Sum Closest</title>
-      <link href="/2026/01/26/LeetCode%2016.%203Sum%20Closest/"/>
-      <url>/2026/01/26/LeetCode%2016.%203Sum%20Closest/</url>
+      <title>LeetCode 13. Roman to Integer</title>
+      <link href="/2026/01/26/LeetCode%2013.%20Roman%20to%20Integer/"/>
+      <url>/2026/01/26/LeetCode%2013.%20Roman%20to%20Integer/</url>
       
-        <content type="html"><![CDATA[<h1 id="LeetCode-16-3Sum-Closest"><a href="#LeetCode-16-3Sum-Closest" class="headerlink" title="LeetCode 16. 3Sum Closest"></a>LeetCode 16. 3Sum Closest</h1><p><a href="https://leetcode.com/problems/3sum-closest/">https://leetcode.com/problems/3sum-closest/</a></p><h2 id="Difficulty-Medium"><a href="#Difficulty-Medium" class="headerlink" title="Difficulty: Medium"></a>Difficulty: Medium</h2><h2 id="Key-point-Sorting-Two-Pointers"><a href="#Key-point-Sorting-Two-Pointers" class="headerlink" title="Key point: Sorting + Two Pointers"></a>Key point: Sorting + Two Pointers</h2><p>This problem builds on the 3Sum pattern and requires you to find a triplet whose sum is <strong>closest</strong> to the given target.</p><p>We are given an integer array <code>nums</code> and an integer <code>target</code>. We need to return the sum of the three integers in <code>nums</code> such that the sum is closest to <code>target</code>.</p><hr><h2 id="Breakdown-into-small-parts"><a href="#Breakdown-into-small-parts" class="headerlink" title="Breakdown into small parts:"></a>Breakdown into small parts:</h2><ol><li>Sort the array <code>nums</code>. This allows two-pointer traversal.</li><li>Iterate through the array using an index <code>i</code>, fixing the first number.</li><li>Use two pointers:<ul><li><code>left</code> &#x3D; <code>i + 1</code></li><li><code>right</code> &#x3D; <code>len(nums) - 1</code></li></ul></li><li>At each step, calculate the total of <code>nums[i] + nums[left] + nums[right]</code>.</li><li>Compare the absolute difference <code>abs(total - target)</code> with the smallest seen so far.</li><li>Move the pointers:<ul><li>If total &gt; target: move <code>right</code> leftward.</li><li>If total &lt; target: move <code>left</code> rightward.</li><li>If total &#x3D;&#x3D; target: return early.</li></ul></li><li>After the loop, return the closest total found.</li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code:"></a>Complete code:</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">threeSumClosest</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], target: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        nums.sort()</span><br><span class="line">        closest = <span class="built_in">float</span>(<span class="string">&#x27;inf&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(nums) - <span class="number">2</span>):</span><br><span class="line">            left, right = i + <span class="number">1</span>, <span class="built_in">len</span>(nums) - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> left &lt; right:</span><br><span class="line">                total = nums[i] + nums[left] + nums[right]</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> <span class="built_in">abs</span>(total - target) &lt; <span class="built_in">abs</span>(closest - target):</span><br><span class="line">                    closest = total</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> total &lt; target:</span><br><span class="line">                    left += <span class="number">1</span></span><br><span class="line">                <span class="keyword">elif</span> total &gt; target:</span><br><span class="line">                    right -= <span class="number">1</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">return</span> target  <span class="comment"># Exact match found</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> closest</span><br></pre></td></tr></table></figure>]]></content>
+        <content type="html"><![CDATA[<h1 id="LeetCode-13-Roman-to-Integer"><a href="#LeetCode-13-Roman-to-Integer" class="headerlink" title="LeetCode 13. Roman to Integer"></a>LeetCode 13. Roman to Integer</h1><p><a href="https://leetcode.com/problems/roman-to-integer/">https://leetcode.com/problems/roman-to-integer/</a></p><h2 id="Difficulty-Easy"><a href="#Difficulty-Easy" class="headerlink" title="Difficulty: Easy"></a>Difficulty: Easy</h2><h2 id="Key-point-Character-Mapping-and-Subtraction-Rule"><a href="#Key-point-Character-Mapping-and-Subtraction-Rule" class="headerlink" title="Key point: Character Mapping and Subtraction Rule"></a>Key point: Character Mapping and Subtraction Rule</h2><p>This problem checks your understanding of string traversal and the Roman numeral system’s subtraction rule.</p><p>We are given a Roman numeral string and must convert it to its integer value.</p><p>The input is guaranteed to be valid and in the range 1 to 3999.</p><hr><h2 id="Breakdown-into-small-parts"><a href="#Breakdown-into-small-parts" class="headerlink" title="Breakdown into small parts:"></a>Breakdown into small parts:</h2><ol><li>Create a dictionary that maps Roman characters to their integer values.</li><li>Iterate through the string from left to right.</li><li>For each character, compare its value with the next character:<ul><li>If the next character has a larger value, subtract the current value.</li><li>Otherwise, add the current value.</li></ul></li><li>Continue this until the end of the string.</li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code:"></a>Complete code:</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">romanToInt</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        roman_map = &#123;</span><br><span class="line">            <span class="string">&#x27;I&#x27;</span>: <span class="number">1</span>, <span class="string">&#x27;V&#x27;</span>: <span class="number">5</span>, <span class="string">&#x27;X&#x27;</span>: <span class="number">10</span>, <span class="string">&#x27;L&#x27;</span>: <span class="number">50</span>,</span><br><span class="line">            <span class="string">&#x27;C&#x27;</span>: <span class="number">100</span>, <span class="string">&#x27;D&#x27;</span>: <span class="number">500</span>, <span class="string">&#x27;M&#x27;</span>: <span class="number">1000</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        total = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(s)):</span><br><span class="line">            value = roman_map[s[i]]</span><br><span class="line">            <span class="keyword">if</span> i &lt; <span class="built_in">len</span>(s) - <span class="number">1</span> <span class="keyword">and</span> roman_map[s[i]] &lt; roman_map[s[i + <span class="number">1</span>]]:</span><br><span class="line">                total -= value</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                total += value</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> total</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Hash Table </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>LeetCode 15. 3Sum</title>
+      <link href="/2026/01/26/LeetCode%2015.%203Sum/"/>
+      <url>/2026/01/26/LeetCode%2015.%203Sum/</url>
+      
+        <content type="html"><![CDATA[<h1 id="LeetCode-15-3Sum"><a href="#LeetCode-15-3Sum" class="headerlink" title="LeetCode 15. 3Sum"></a>LeetCode 15. 3Sum</h1><p><a href="https://leetcode.com/problems/3sum/">https://leetcode.com/problems/3sum/</a></p><h2 id="Difficulty-Medium"><a href="#Difficulty-Medium" class="headerlink" title="Difficulty: Medium"></a>Difficulty: Medium</h2><h2 id="Key-point-Sorting-Two-Pointers"><a href="#Key-point-Sorting-Two-Pointers" class="headerlink" title="Key point: Sorting + Two Pointers"></a>Key point: Sorting + Two Pointers</h2><p>This problem checks your understanding of how to combine sorting with the two-pointer technique to reduce time complexity.</p><p>We are given an integer array <code>nums</code> and need to find all unique triplets <code>[a, b, c]</code> such that:</p><p>a + b + c &#x3D;&#x3D; 0</p><p>The solution must not contain duplicate triplets.</p><hr><h2 id="Breakdown-into-small-parts"><a href="#Breakdown-into-small-parts" class="headerlink" title="Breakdown into small parts:"></a>Breakdown into small parts:</h2><ol><li>Sort the array first. This allows duplicate checking and two-pointer usage.</li><li>Fix one number (<code>nums[i]</code>) and use two pointers (<code>left</code>, <code>right</code>) to find the other two numbers.</li><li>Skip duplicates:<ul><li>Skip duplicate <code>nums[i]</code> values.</li><li>After finding a valid triplet, skip duplicate values for <code>left</code> and <code>right</code>.</li></ul></li><li>Move pointers based on the total:<ul><li>If total &lt; 0: move <code>left</code> forward.</li><li>If total &gt; 0: move <code>right</code> backward.</li><li>If total &#x3D;&#x3D; 0: store the triplet and move both pointers.</li></ul></li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code:"></a>Complete code:</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">threeSum</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        nums.sort()</span><br><span class="line">        result = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(nums) - <span class="number">2</span>):</span><br><span class="line">            <span class="keyword">if</span> i &gt; <span class="number">0</span> <span class="keyword">and</span> nums[i] == nums[i - <span class="number">1</span>]:</span><br><span class="line">                <span class="keyword">continue</span>  <span class="comment"># Skip duplicate first number</span></span><br><span class="line"></span><br><span class="line">            left, right = i + <span class="number">1</span>, <span class="built_in">len</span>(nums) - <span class="number">1</span></span><br><span class="line">            <span class="keyword">while</span> left &lt; right:</span><br><span class="line">                total = nums[i] + nums[left] + nums[right]</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> total == <span class="number">0</span>:</span><br><span class="line">                    result.append([nums[i], nums[left], nums[right]])</span><br><span class="line">                    <span class="keyword">while</span> left &lt; right <span class="keyword">and</span> nums[left] == nums[left + <span class="number">1</span>]:</span><br><span class="line">                        left += <span class="number">1</span></span><br><span class="line">                    <span class="keyword">while</span> left &lt; right <span class="keyword">and</span> nums[right] == nums[right - <span class="number">1</span>]:</span><br><span class="line">                        right -= <span class="number">1</span></span><br><span class="line">                    left += <span class="number">1</span></span><br><span class="line">                    right -= <span class="number">1</span></span><br><span class="line">                <span class="keyword">elif</span> total &lt; <span class="number">0</span>:</span><br><span class="line">                    left += <span class="number">1</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    right -= <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>]]></content>
       
       
       <categories>
@@ -1085,38 +1362,11 @@
     
     
     <entry>
-      <title>LeetCode 17. Letter Combinations of a Phone Number</title>
-      <link href="/2026/01/26/LeetCode%2017.%20Letter%20Combinations%20of%20a%20Phone%20Number/"/>
-      <url>/2026/01/26/LeetCode%2017.%20Letter%20Combinations%20of%20a%20Phone%20Number/</url>
+      <title>LeetCode 16. 3Sum Closest</title>
+      <link href="/2026/01/26/LeetCode%2016.%203Sum%20Closest/"/>
+      <url>/2026/01/26/LeetCode%2016.%203Sum%20Closest/</url>
       
-        <content type="html"><![CDATA[<h1 id="LeetCode-17-Letter-Combinations-of-a-Phone-Number"><a href="#LeetCode-17-Letter-Combinations-of-a-Phone-Number" class="headerlink" title="LeetCode 17. Letter Combinations of a Phone Number"></a>LeetCode 17. Letter Combinations of a Phone Number</h1><p><a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/">https://leetcode.com/problems/letter-combinations-of-a-phone-number/</a></p><h2 id="Difficulty-Medium"><a href="#Difficulty-Medium" class="headerlink" title="Difficulty: Medium"></a>Difficulty: Medium</h2><h2 id="Key-point-Backtracking-DFS"><a href="#Key-point-Backtracking-DFS" class="headerlink" title="Key point: Backtracking &#x2F; DFS"></a>Key point: Backtracking &#x2F; DFS</h2><p>This problem checks your understanding of recursive backtracking by generating all valid combinations.</p><p>We are given a string of digits <code>digits</code>, where each digit maps to a set of letters on a telephone keypad.</p><p>We need to return all possible letter combinations that the number could represent.</p><hr><h2 id="Breakdown-into-small-parts"><a href="#Breakdown-into-small-parts" class="headerlink" title="Breakdown into small parts:"></a>Breakdown into small parts:</h2><ol><li>Define the mapping from digits to letters using a dictionary.</li><li>If the input <code>digits</code> is empty, return an empty list.</li><li>Use a helper function to perform <strong>backtracking</strong>:<ul><li>Maintain the current index in the digit string.</li><li>Maintain the current path (partial combination).</li><li>When the path is the same length as digits, add it to the result list.</li></ul></li><li>At each recursive step:<ul><li>Iterate over the letters mapped to the current digit.</li><li>Add the letter to the current path.</li><li>Move to the next digit (index + 1).</li></ul></li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code:"></a>Complete code:</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">letterCombinations</span>(<span class="params">self, digits: <span class="built_in">str</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">str</span>]:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> digits:</span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line"></span><br><span class="line">        phone_map = &#123;</span><br><span class="line">            <span class="string">&quot;2&quot;</span>: <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;3&quot;</span>: <span class="string">&quot;def&quot;</span>,</span><br><span class="line">            <span class="string">&quot;4&quot;</span>: <span class="string">&quot;ghi&quot;</span>, <span class="string">&quot;5&quot;</span>: <span class="string">&quot;jkl&quot;</span>, <span class="string">&quot;6&quot;</span>: <span class="string">&quot;mno&quot;</span>,</span><br><span class="line">            <span class="string">&quot;7&quot;</span>: <span class="string">&quot;pqrs&quot;</span>, <span class="string">&quot;8&quot;</span>: <span class="string">&quot;tuv&quot;</span>, <span class="string">&quot;9&quot;</span>: <span class="string">&quot;wxyz&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        result = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">backtrack</span>(<span class="params">index: <span class="built_in">int</span>, path: <span class="built_in">str</span></span>):</span><br><span class="line">            <span class="keyword">if</span> index == <span class="built_in">len</span>(digits):</span><br><span class="line">                result.append(path)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> letter <span class="keyword">in</span> phone_map[digits[index]]:</span><br><span class="line">                backtrack(index + <span class="number">1</span>, path + letter)</span><br><span class="line"></span><br><span class="line">        backtrack(<span class="number">0</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      <categories>
-          
-          <category> LeetCode </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> String </tag>
-            
-            <tag> Hash Table </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>LeetCode 12. Integer to Roman</title>
-      <link href="/2026/01/26/LeetCode%2012.%20Integer%20to%20Roman/"/>
-      <url>/2026/01/26/LeetCode%2012.%20Integer%20to%20Roman/</url>
-      
-        <content type="html"><![CDATA[<h1 id="LeetCode-12-Integer-to-Roman"><a href="#LeetCode-12-Integer-to-Roman" class="headerlink" title="LeetCode 12. Integer to Roman"></a>LeetCode 12. Integer to Roman</h1><p><a href="https://leetcode.com/problems/integer-to-roman/">https://leetcode.com/problems/integer-to-roman/</a></p><h2 id="Difficulty-Medium"><a href="#Difficulty-Medium" class="headerlink" title="Difficulty: Medium"></a>Difficulty: Medium</h2><h2 id="Key-point-Greedy-Algorithm-Number-Conversion"><a href="#Key-point-Greedy-Algorithm-Number-Conversion" class="headerlink" title="Key point: Greedy Algorithm - Number Conversion"></a>Key point: Greedy Algorithm - Number Conversion</h2><p>This problem checks your understanding of number decomposition and greedy matching.</p><p>We are given an integer <code>num</code> and need to convert it into its Roman numeral representation.</p><p>The input is guaranteed to be within the range <code>1 &lt;= num &lt;= 3999</code>.</p><hr><h2 id="Breakdown-into-small-parts"><a href="#Breakdown-into-small-parts" class="headerlink" title="Breakdown into small parts:"></a>Breakdown into small parts:</h2><ol><li><p><strong>Prepare mappings</strong> of integer values to corresponding Roman numerals.</p><p> The Roman numerals are constructed from largest to smallest, subtracting the matched value at each step.</p></li><li><p><strong>Use a greedy approach</strong>:</p><p> Iterate through the value-symbol pairs from largest to smallest.</p></li><li><p>For each value, <strong>append the corresponding symbol</strong> while <code>num &gt;= value</code>.</p></li><li><p><strong>Subtract the value</strong> from <code>num</code> and repeat until <code>num</code> becomes 0.</p></li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code:"></a>Complete code:</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">intToRoman</span>(<span class="params">self, num: <span class="built_in">int</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        val_map = [</span><br><span class="line">            (<span class="number">1000</span>, <span class="string">&#x27;M&#x27;</span>), (<span class="number">900</span>, <span class="string">&#x27;CM&#x27;</span>),</span><br><span class="line">            (<span class="number">500</span>, <span class="string">&#x27;D&#x27;</span>), (<span class="number">400</span>, <span class="string">&#x27;CD&#x27;</span>),</span><br><span class="line">            (<span class="number">100</span>, <span class="string">&#x27;C&#x27;</span>), (<span class="number">90</span>, <span class="string">&#x27;XC&#x27;</span>),</span><br><span class="line">            (<span class="number">50</span>, <span class="string">&#x27;L&#x27;</span>), (<span class="number">40</span>, <span class="string">&#x27;XL&#x27;</span>),</span><br><span class="line">            (<span class="number">10</span>, <span class="string">&#x27;X&#x27;</span>), (<span class="number">9</span>, <span class="string">&#x27;IX&#x27;</span>),</span><br><span class="line">            (<span class="number">5</span>, <span class="string">&#x27;V&#x27;</span>), (<span class="number">4</span>, <span class="string">&#x27;IV&#x27;</span>),</span><br><span class="line">            (<span class="number">1</span>, <span class="string">&#x27;I&#x27;</span>)</span><br><span class="line">        ]</span><br><span class="line"></span><br><span class="line">        result = []</span><br><span class="line">        <span class="keyword">for</span> value, symbol <span class="keyword">in</span> val_map:</span><br><span class="line">            <span class="keyword">while</span> num &gt;= value:</span><br><span class="line">                result.append(symbol)</span><br><span class="line">                num -= value</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join(result)</span><br></pre></td></tr></table></figure>]]></content>
+        <content type="html"><![CDATA[<h1 id="LeetCode-16-3Sum-Closest"><a href="#LeetCode-16-3Sum-Closest" class="headerlink" title="LeetCode 16. 3Sum Closest"></a>LeetCode 16. 3Sum Closest</h1><p><a href="https://leetcode.com/problems/3sum-closest/">https://leetcode.com/problems/3sum-closest/</a></p><h2 id="Difficulty-Medium"><a href="#Difficulty-Medium" class="headerlink" title="Difficulty: Medium"></a>Difficulty: Medium</h2><h2 id="Key-point-Sorting-Two-Pointers"><a href="#Key-point-Sorting-Two-Pointers" class="headerlink" title="Key point: Sorting + Two Pointers"></a>Key point: Sorting + Two Pointers</h2><p>This problem builds on the 3Sum pattern and requires you to find a triplet whose sum is <strong>closest</strong> to the given target.</p><p>We are given an integer array <code>nums</code> and an integer <code>target</code>. We need to return the sum of the three integers in <code>nums</code> such that the sum is closest to <code>target</code>.</p><hr><h2 id="Breakdown-into-small-parts"><a href="#Breakdown-into-small-parts" class="headerlink" title="Breakdown into small parts:"></a>Breakdown into small parts:</h2><ol><li>Sort the array <code>nums</code>. This allows two-pointer traversal.</li><li>Iterate through the array using an index <code>i</code>, fixing the first number.</li><li>Use two pointers:<ul><li><code>left</code> &#x3D; <code>i + 1</code></li><li><code>right</code> &#x3D; <code>len(nums) - 1</code></li></ul></li><li>At each step, calculate the total of <code>nums[i] + nums[left] + nums[right]</code>.</li><li>Compare the absolute difference <code>abs(total - target)</code> with the smallest seen so far.</li><li>Move the pointers:<ul><li>If total &gt; target: move <code>right</code> leftward.</li><li>If total &lt; target: move <code>left</code> rightward.</li><li>If total &#x3D;&#x3D; target: return early.</li></ul></li><li>After the loop, return the closest total found.</li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code:"></a>Complete code:</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">threeSumClosest</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], target: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        nums.sort()</span><br><span class="line">        closest = <span class="built_in">float</span>(<span class="string">&#x27;inf&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(nums) - <span class="number">2</span>):</span><br><span class="line">            left, right = i + <span class="number">1</span>, <span class="built_in">len</span>(nums) - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> left &lt; right:</span><br><span class="line">                total = nums[i] + nums[left] + nums[right]</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> <span class="built_in">abs</span>(total - target) &lt; <span class="built_in">abs</span>(closest - target):</span><br><span class="line">                    closest = total</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> total &lt; target:</span><br><span class="line">                    left += <span class="number">1</span></span><br><span class="line">                <span class="keyword">elif</span> total &gt; target:</span><br><span class="line">                    right -= <span class="number">1</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">return</span> target  <span class="comment"># Exact match found</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> closest</span><br></pre></td></tr></table></figure>]]></content>
       
       
       <categories>
@@ -1128,34 +1378,9 @@
       
         <tags>
             
-            <tag> Hash Table </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>LeetCode 19. Remove Nth Node from End of List</title>
-      <link href="/2026/01/26/LeetCode%2019.%20Remove%20Nth%20Node%20from%20End%20of%20List/"/>
-      <url>/2026/01/26/LeetCode%2019.%20Remove%20Nth%20Node%20from%20End%20of%20List/</url>
-      
-        <content type="html"><![CDATA[<h1 id="LeetCode-19-Remove-Nth-Node-from-End-of-List"><a href="#LeetCode-19-Remove-Nth-Node-from-End-of-List" class="headerlink" title="LeetCode 19. Remove Nth Node from End of List"></a>LeetCode 19. Remove Nth Node from End of List</h1><p><a href="https://leetcode.com/problems/remove-nth-node-from-end-of-list/">https://leetcode.com/problems/remove-nth-node-from-end-of-list/</a></p><h2 id="Difficulty-Medium"><a href="#Difficulty-Medium" class="headerlink" title="Difficulty: Medium"></a>Difficulty: Medium</h2><h2 id="Key-point-Linked-List-Two-Pointers"><a href="#Key-point-Linked-List-Two-Pointers" class="headerlink" title="Key point: Linked List + Two Pointers"></a>Key point: Linked List + Two Pointers</h2><p>This problem checks your understanding of singly linked list traversal and the two-pointer (fast and slow) technique.</p><p>We are given the head of a singly linked list and an integer n.</p><p>We must remove the nth node from the end of the list and return the head of the modified list.</p><hr><h2 id="Breakdown-into-small-parts"><a href="#Breakdown-into-small-parts" class="headerlink" title="Breakdown into small parts:"></a>Breakdown into small parts:</h2><ol><li><p>Create a dummy node before the head.</p><p> This helps handle edge cases like removing the head node itself.</p></li><li><p>Use two pointers: fast and slow.</p><p> Both start at the dummy node.</p></li><li><p>Move fast ahead by (n + 1) steps.</p><p> This creates a gap of n nodes between fast and slow.</p></li><li><p>Move both pointers until fast reaches the end.</p><p> At that point, slow is just before the node to be deleted.</p></li><li><p>Delete the node by:</p><p> <code>slow.next = slow.next.next</code></p></li><li><p>Return <code>dummy.next</code> as the new head.</p></li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code:"></a>Complete code:</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">removeNthFromEnd</span>(<span class="params">self, head: ListNode, n: <span class="built_in">int</span></span>) -&gt; ListNode:</span><br><span class="line">        dummy = ListNode(<span class="number">0</span>, head)</span><br><span class="line">        fast = slow = dummy</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Step 1: Move fast pointer n + 1 steps ahead</span></span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n + <span class="number">1</span>):</span><br><span class="line">            fast = fast.<span class="built_in">next</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Step 2: Move both pointers until fast reaches the end</span></span><br><span class="line">        <span class="keyword">while</span> fast:</span><br><span class="line">            fast = fast.<span class="built_in">next</span></span><br><span class="line">            slow = slow.<span class="built_in">next</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Step 3: Remove the target node</span></span><br><span class="line">        slow.<span class="built_in">next</span> = slow.<span class="built_in">next</span>.<span class="built_in">next</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dummy.<span class="built_in">next</span></span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      <categories>
-          
-          <category> LeetCode </category>
-          
-      </categories>
-      
-      
-        <tags>
+            <tag> Array </tag>
             
             <tag> Two Pointers </tag>
-            
-            <tag> Linked List </tag>
             
         </tags>
       
@@ -1216,6 +1441,60 @@
     
     
     <entry>
+      <title>LeetCode 17. Letter Combinations of a Phone Number</title>
+      <link href="/2026/01/26/LeetCode%2017.%20Letter%20Combinations%20of%20a%20Phone%20Number/"/>
+      <url>/2026/01/26/LeetCode%2017.%20Letter%20Combinations%20of%20a%20Phone%20Number/</url>
+      
+        <content type="html"><![CDATA[<h1 id="LeetCode-17-Letter-Combinations-of-a-Phone-Number"><a href="#LeetCode-17-Letter-Combinations-of-a-Phone-Number" class="headerlink" title="LeetCode 17. Letter Combinations of a Phone Number"></a>LeetCode 17. Letter Combinations of a Phone Number</h1><p><a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/">https://leetcode.com/problems/letter-combinations-of-a-phone-number/</a></p><h2 id="Difficulty-Medium"><a href="#Difficulty-Medium" class="headerlink" title="Difficulty: Medium"></a>Difficulty: Medium</h2><h2 id="Key-point-Backtracking-DFS"><a href="#Key-point-Backtracking-DFS" class="headerlink" title="Key point: Backtracking &#x2F; DFS"></a>Key point: Backtracking &#x2F; DFS</h2><p>This problem checks your understanding of recursive backtracking by generating all valid combinations.</p><p>We are given a string of digits <code>digits</code>, where each digit maps to a set of letters on a telephone keypad.</p><p>We need to return all possible letter combinations that the number could represent.</p><hr><h2 id="Breakdown-into-small-parts"><a href="#Breakdown-into-small-parts" class="headerlink" title="Breakdown into small parts:"></a>Breakdown into small parts:</h2><ol><li>Define the mapping from digits to letters using a dictionary.</li><li>If the input <code>digits</code> is empty, return an empty list.</li><li>Use a helper function to perform <strong>backtracking</strong>:<ul><li>Maintain the current index in the digit string.</li><li>Maintain the current path (partial combination).</li><li>When the path is the same length as digits, add it to the result list.</li></ul></li><li>At each recursive step:<ul><li>Iterate over the letters mapped to the current digit.</li><li>Add the letter to the current path.</li><li>Move to the next digit (index + 1).</li></ul></li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code:"></a>Complete code:</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">letterCombinations</span>(<span class="params">self, digits: <span class="built_in">str</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">str</span>]:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> digits:</span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line"></span><br><span class="line">        phone_map = &#123;</span><br><span class="line">            <span class="string">&quot;2&quot;</span>: <span class="string">&quot;abc&quot;</span>, <span class="string">&quot;3&quot;</span>: <span class="string">&quot;def&quot;</span>,</span><br><span class="line">            <span class="string">&quot;4&quot;</span>: <span class="string">&quot;ghi&quot;</span>, <span class="string">&quot;5&quot;</span>: <span class="string">&quot;jkl&quot;</span>, <span class="string">&quot;6&quot;</span>: <span class="string">&quot;mno&quot;</span>,</span><br><span class="line">            <span class="string">&quot;7&quot;</span>: <span class="string">&quot;pqrs&quot;</span>, <span class="string">&quot;8&quot;</span>: <span class="string">&quot;tuv&quot;</span>, <span class="string">&quot;9&quot;</span>: <span class="string">&quot;wxyz&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        result = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">backtrack</span>(<span class="params">index: <span class="built_in">int</span>, path: <span class="built_in">str</span></span>):</span><br><span class="line">            <span class="keyword">if</span> index == <span class="built_in">len</span>(digits):</span><br><span class="line">                result.append(path)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> letter <span class="keyword">in</span> phone_map[digits[index]]:</span><br><span class="line">                backtrack(index + <span class="number">1</span>, path + letter)</span><br><span class="line"></span><br><span class="line">        backtrack(<span class="number">0</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> String </tag>
+            
+            <tag> Hash Table </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>LeetCode 19. Remove Nth Node from End of List</title>
+      <link href="/2026/01/26/LeetCode%2019.%20Remove%20Nth%20Node%20from%20End%20of%20List/"/>
+      <url>/2026/01/26/LeetCode%2019.%20Remove%20Nth%20Node%20from%20End%20of%20List/</url>
+      
+        <content type="html"><![CDATA[<h1 id="LeetCode-19-Remove-Nth-Node-from-End-of-List"><a href="#LeetCode-19-Remove-Nth-Node-from-End-of-List" class="headerlink" title="LeetCode 19. Remove Nth Node from End of List"></a>LeetCode 19. Remove Nth Node from End of List</h1><p><a href="https://leetcode.com/problems/remove-nth-node-from-end-of-list/">https://leetcode.com/problems/remove-nth-node-from-end-of-list/</a></p><h2 id="Difficulty-Medium"><a href="#Difficulty-Medium" class="headerlink" title="Difficulty: Medium"></a>Difficulty: Medium</h2><h2 id="Key-point-Linked-List-Two-Pointers"><a href="#Key-point-Linked-List-Two-Pointers" class="headerlink" title="Key point: Linked List + Two Pointers"></a>Key point: Linked List + Two Pointers</h2><p>This problem checks your understanding of singly linked list traversal and the two-pointer (fast and slow) technique.</p><p>We are given the head of a singly linked list and an integer n.</p><p>We must remove the nth node from the end of the list and return the head of the modified list.</p><hr><h2 id="Breakdown-into-small-parts"><a href="#Breakdown-into-small-parts" class="headerlink" title="Breakdown into small parts:"></a>Breakdown into small parts:</h2><ol><li><p>Create a dummy node before the head.</p><p> This helps handle edge cases like removing the head node itself.</p></li><li><p>Use two pointers: fast and slow.</p><p> Both start at the dummy node.</p></li><li><p>Move fast ahead by (n + 1) steps.</p><p> This creates a gap of n nodes between fast and slow.</p></li><li><p>Move both pointers until fast reaches the end.</p><p> At that point, slow is just before the node to be deleted.</p></li><li><p>Delete the node by:</p><p> <code>slow.next = slow.next.next</code></p></li><li><p>Return <code>dummy.next</code> as the new head.</p></li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code:"></a>Complete code:</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">removeNthFromEnd</span>(<span class="params">self, head: ListNode, n: <span class="built_in">int</span></span>) -&gt; ListNode:</span><br><span class="line">        dummy = ListNode(<span class="number">0</span>, head)</span><br><span class="line">        fast = slow = dummy</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Step 1: Move fast pointer n + 1 steps ahead</span></span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n + <span class="number">1</span>):</span><br><span class="line">            fast = fast.<span class="built_in">next</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Step 2: Move both pointers until fast reaches the end</span></span><br><span class="line">        <span class="keyword">while</span> fast:</span><br><span class="line">            fast = fast.<span class="built_in">next</span></span><br><span class="line">            slow = slow.<span class="built_in">next</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Step 3: Remove the target node</span></span><br><span class="line">        slow.<span class="built_in">next</span> = slow.<span class="built_in">next</span>.<span class="built_in">next</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dummy.<span class="built_in">next</span></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Two Pointers </tag>
+            
+            <tag> Linked List </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>LeetCode 22. Generate Parentheses</title>
       <link href="/2026/01/26/LeetCode%2022.%20Generate%20Parentheses/"/>
       <url>/2026/01/26/LeetCode%2022.%20Generate%20Parentheses/</url>
@@ -1233,33 +1512,6 @@
         <tags>
             
             <tag> String </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>LeetCode 15. 3Sum</title>
-      <link href="/2026/01/26/LeetCode%2015.%203Sum/"/>
-      <url>/2026/01/26/LeetCode%2015.%203Sum/</url>
-      
-        <content type="html"><![CDATA[<h1 id="LeetCode-15-3Sum"><a href="#LeetCode-15-3Sum" class="headerlink" title="LeetCode 15. 3Sum"></a>LeetCode 15. 3Sum</h1><p><a href="https://leetcode.com/problems/3sum/">https://leetcode.com/problems/3sum/</a></p><h2 id="Difficulty-Medium"><a href="#Difficulty-Medium" class="headerlink" title="Difficulty: Medium"></a>Difficulty: Medium</h2><h2 id="Key-point-Sorting-Two-Pointers"><a href="#Key-point-Sorting-Two-Pointers" class="headerlink" title="Key point: Sorting + Two Pointers"></a>Key point: Sorting + Two Pointers</h2><p>This problem checks your understanding of how to combine sorting with the two-pointer technique to reduce time complexity.</p><p>We are given an integer array <code>nums</code> and need to find all unique triplets <code>[a, b, c]</code> such that:</p><p>a + b + c &#x3D;&#x3D; 0</p><p>The solution must not contain duplicate triplets.</p><hr><h2 id="Breakdown-into-small-parts"><a href="#Breakdown-into-small-parts" class="headerlink" title="Breakdown into small parts:"></a>Breakdown into small parts:</h2><ol><li>Sort the array first. This allows duplicate checking and two-pointer usage.</li><li>Fix one number (<code>nums[i]</code>) and use two pointers (<code>left</code>, <code>right</code>) to find the other two numbers.</li><li>Skip duplicates:<ul><li>Skip duplicate <code>nums[i]</code> values.</li><li>After finding a valid triplet, skip duplicate values for <code>left</code> and <code>right</code>.</li></ul></li><li>Move pointers based on the total:<ul><li>If total &lt; 0: move <code>left</code> forward.</li><li>If total &gt; 0: move <code>right</code> backward.</li><li>If total &#x3D;&#x3D; 0: store the triplet and move both pointers.</li></ul></li></ol><hr><h2 id="Complete-code"><a href="#Complete-code" class="headerlink" title="Complete code:"></a>Complete code:</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">threeSum</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        nums.sort()</span><br><span class="line">        result = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(nums) - <span class="number">2</span>):</span><br><span class="line">            <span class="keyword">if</span> i &gt; <span class="number">0</span> <span class="keyword">and</span> nums[i] == nums[i - <span class="number">1</span>]:</span><br><span class="line">                <span class="keyword">continue</span>  <span class="comment"># Skip duplicate first number</span></span><br><span class="line"></span><br><span class="line">            left, right = i + <span class="number">1</span>, <span class="built_in">len</span>(nums) - <span class="number">1</span></span><br><span class="line">            <span class="keyword">while</span> left &lt; right:</span><br><span class="line">                total = nums[i] + nums[left] + nums[right]</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> total == <span class="number">0</span>:</span><br><span class="line">                    result.append([nums[i], nums[left], nums[right]])</span><br><span class="line">                    <span class="keyword">while</span> left &lt; right <span class="keyword">and</span> nums[left] == nums[left + <span class="number">1</span>]:</span><br><span class="line">                        left += <span class="number">1</span></span><br><span class="line">                    <span class="keyword">while</span> left &lt; right <span class="keyword">and</span> nums[right] == nums[right - <span class="number">1</span>]:</span><br><span class="line">                        right -= <span class="number">1</span></span><br><span class="line">                    left += <span class="number">1</span></span><br><span class="line">                    right -= <span class="number">1</span></span><br><span class="line">                <span class="keyword">elif</span> total &lt; <span class="number">0</span>:</span><br><span class="line">                    left += <span class="number">1</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    right -= <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      <categories>
-          
-          <category> LeetCode </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Array </tag>
-            
-            <tag> Two Pointers </tag>
             
         </tags>
       
@@ -1343,31 +1595,6 @@
     
     
     <entry>
-      <title>LeetCode 7. Reverse Interger</title>
-      <link href="/2026/01/26/LeetCode%207.%20Reverse%20Interger/"/>
-      <url>/2026/01/26/LeetCode%207.%20Reverse%20Interger/</url>
-      
-        <content type="html"><![CDATA[<h1 id="LeetCode-7-Reverse-Interger"><a href="#LeetCode-7-Reverse-Interger" class="headerlink" title="LeetCode 7. Reverse Interger"></a>LeetCode 7. Reverse Interger</h1><p><a href="https://leetcode.com/problems/reverse-integer/">https://leetcode.com/problems/reverse-integer/</a></p><h2 id="Difficulty-Medium"><a href="#Difficulty-Medium" class="headerlink" title="Difficulty: Medium"></a>Difficulty: Medium</h2><h2 id="Key-point-Integer-Manipulation"><a href="#Key-point-Integer-Manipulation" class="headerlink" title="Key point: Integer Manipulation"></a>Key point: Integer Manipulation</h2><p>This problem checks basic math operations and integer reversal.</p><p>We are given a signed 32-bit integer and need to reverse its digits.</p><p>If the reversed number overflows the 32-bit signed integer range, we return <code>0</code>.</p><hr><h2 id="Breakdown-into-small-parts"><a href="#Breakdown-into-small-parts" class="headerlink" title="Breakdown into small parts:"></a>Breakdown into small parts:</h2><ol><li><p><strong>Check the sign</strong> of the integer <code>x</code>.</p><p> If negative, store the sign and convert <code>x</code> to a positive number.</p></li><li><p><strong>Extract digits</strong> using <code>% 10</code>, and build the reversed number using:</p> <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">reversed_num = reversed_num * <span class="number">10</span> + digit</span><br></pre></td></tr></table></figure></li><li><p><strong>Reduce the input</strong> using integer division <code>x //= 10</code>.</p></li><li><p>After reversal, apply the sign back to <code>reversed_num</code>.</p></li><li><p>Handle 32-bit overflow.<br>If <code>reversed_num</code> is out of range [-2^31, 2^31 - 1], return 0.</p></li></ol><hr><p>Complete code:</p><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reverse</span>(<span class="params">self, x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># Step 1: Handle sign</span></span><br><span class="line">        sign = -<span class="number">1</span> <span class="keyword">if</span> x &lt; <span class="number">0</span> <span class="keyword">else</span> <span class="number">1</span></span><br><span class="line">        x = <span class="built_in">abs</span>(x)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Step 2: Reverse digits</span></span><br><span class="line">        reversed_num = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> x != <span class="number">0</span>:</span><br><span class="line">            digit = x % <span class="number">10</span></span><br><span class="line">            reversed_num = reversed_num * <span class="number">10</span> + digit</span><br><span class="line">            x //= <span class="number">10</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Step 3: Apply sign</span></span><br><span class="line">        reversed_num *= sign</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Step 4: Check for 32-bit overflow</span></span><br><span class="line">        <span class="keyword">if</span> reversed_num &lt; -<span class="number">2</span>**<span class="number">31</span> <span class="keyword">or</span> reversed_num &gt; <span class="number">2</span>**<span class="number">31</span> - <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> reversed_num</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      <categories>
-          
-          <category> LeetCode </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Math </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>LeetCode 8. String to Integer(atoi)</title>
       <link href="/2026/01/26/LeetCode%208.%20String%20to%20Integer(atoi)/"/>
       <url>/2026/01/26/LeetCode%208.%20String%20to%20Integer(atoi)/</url>
@@ -1385,6 +1612,31 @@
         <tags>
             
             <tag> String </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>LeetCode 7. Reverse Interger</title>
+      <link href="/2026/01/26/LeetCode%207.%20Reverse%20Interger/"/>
+      <url>/2026/01/26/LeetCode%207.%20Reverse%20Interger/</url>
+      
+        <content type="html"><![CDATA[<h1 id="LeetCode-7-Reverse-Interger"><a href="#LeetCode-7-Reverse-Interger" class="headerlink" title="LeetCode 7. Reverse Interger"></a>LeetCode 7. Reverse Interger</h1><p><a href="https://leetcode.com/problems/reverse-integer/">https://leetcode.com/problems/reverse-integer/</a></p><h2 id="Difficulty-Medium"><a href="#Difficulty-Medium" class="headerlink" title="Difficulty: Medium"></a>Difficulty: Medium</h2><h2 id="Key-point-Integer-Manipulation"><a href="#Key-point-Integer-Manipulation" class="headerlink" title="Key point: Integer Manipulation"></a>Key point: Integer Manipulation</h2><p>This problem checks basic math operations and integer reversal.</p><p>We are given a signed 32-bit integer and need to reverse its digits.</p><p>If the reversed number overflows the 32-bit signed integer range, we return <code>0</code>.</p><hr><h2 id="Breakdown-into-small-parts"><a href="#Breakdown-into-small-parts" class="headerlink" title="Breakdown into small parts:"></a>Breakdown into small parts:</h2><ol><li><p><strong>Check the sign</strong> of the integer <code>x</code>.</p><p> If negative, store the sign and convert <code>x</code> to a positive number.</p></li><li><p><strong>Extract digits</strong> using <code>% 10</code>, and build the reversed number using:</p> <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">reversed_num = reversed_num * <span class="number">10</span> + digit</span><br></pre></td></tr></table></figure></li><li><p><strong>Reduce the input</strong> using integer division <code>x //= 10</code>.</p></li><li><p>After reversal, apply the sign back to <code>reversed_num</code>.</p></li><li><p>Handle 32-bit overflow.<br>If <code>reversed_num</code> is out of range [-2^31, 2^31 - 1], return 0.</p></li></ol><hr><p>Complete code:</p><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reverse</span>(<span class="params">self, x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># Step 1: Handle sign</span></span><br><span class="line">        sign = -<span class="number">1</span> <span class="keyword">if</span> x &lt; <span class="number">0</span> <span class="keyword">else</span> <span class="number">1</span></span><br><span class="line">        x = <span class="built_in">abs</span>(x)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Step 2: Reverse digits</span></span><br><span class="line">        reversed_num = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> x != <span class="number">0</span>:</span><br><span class="line">            digit = x % <span class="number">10</span></span><br><span class="line">            reversed_num = reversed_num * <span class="number">10</span> + digit</span><br><span class="line">            x //= <span class="number">10</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Step 3: Apply sign</span></span><br><span class="line">        reversed_num *= sign</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Step 4: Check for 32-bit overflow</span></span><br><span class="line">        <span class="keyword">if</span> reversed_num &lt; -<span class="number">2</span>**<span class="number">31</span> <span class="keyword">or</span> reversed_num &gt; <span class="number">2</span>**<span class="number">31</span> - <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> reversed_num</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> LeetCode </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Math </tag>
             
         </tags>
       
