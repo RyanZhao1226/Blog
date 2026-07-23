@@ -56,5 +56,12 @@
   { "from": "CKG", "to": "SYX" },
   { "from": "SYX", "to": "CTU" },
   { "from": "CKG", "to": "HKG" },
-  { "from": "HKG", "to": "SFO" }
+  { "from": "HKG", "to": "SFO" },
+  { "from": "SFO", "to": "LAX" },
+  { "from": "LAX", "to": "DOH" },
+  { "from": "DOH", "to": "TFU" },
+  { "from": "TFU", "to": "BHY" },
+  { "from": "CAN", "to": "TFU" },
+  { "from": "TFU", "to": "DOH" },
+  { "from": "DOH", "to": "SFO" }
 ]

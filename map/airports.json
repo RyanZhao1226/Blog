@@ -27,5 +27,9 @@
   "TNA": { "name": "Jinan", "lat": 36.8572, "lng": 117.216 },
   "HKG": { "name": "Hong Kong", "lat": 22.308, "lng": 113.918 },
   "UKB": { "name": "Kobe", "lat": 34.7661, "lng": 135.439 },
-  "CTU": { "name": "Chengdu Shuangliu", "lat": 30.5785, "lng": 103.947 }
+  "CTU": { "name": "Chengdu Shuangliu", "lat": 30.5785, "lng": 103.947 },
+  "LAX": { "name": "Los Angeles", "lat": 33.9425, "lng": -118.4081 },
+  "DOH": { "name": "Doha", "lat": 25.2611, "lng": 51.565 },
+  "BHY": { "name": "Beihai", "lat": 21.5392, "lng": 109.293 },
+  "CAN": { "name": "Guangzhou", "lat": 23.3924, "lng": 113.299 }
 }
